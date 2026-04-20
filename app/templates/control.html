@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+{% if msg %}
+<div class="card">
+  <strong>{{ msg }}</strong>
+</div>
+{% endif %}
+
+<div class="grid two">
+  <div class="card">
+    <h3>Runtime</h3>
+    <div class="muted">
+      Scheduler {{ sched.enabled and "running" or "paused" }} ·
+      Runner {{ sched.running and "busy" or "idle" }} ·
+      Next {{ sched.next_run }}
+    </div>
+    <p class="muted">Last note: {{ sched.last_note }}</p>
+    <p class="muted">Last started: {{ sched.last_started_at|fmt_ts if sched.last_started_at else "—" }}</p>
+    <p class="muted">Last finished: {{ sched.last_finished_at|fmt_ts if sched.last_finished_at else "—" }}</p>
+
+    <div class="row-actions">
+      <form method="post" action="/control/run-once">
+        <button class="btn primary" type="submit">Run Cycle Now</button>
+      </form>
+      <form method="post" action="/control/scheduler-toggle">
+        <button class="btn" type="submit">{{ sched.enabled and "Pause Scheduler" or "Enable Scheduler" }}</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Storage Note</h3>
+    <p class="muted">Live topic state is stored in SQLite inside the mounted vault. That is the efficient path for retrieval, updates, feedback threads, and many iterations.</p>
+    <p class="muted">Markdown is still useful as an export or archival format, but it is a poor primary database once reports become large or you need structured retrieval.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Control Panel</h3>
+  <form method="post" action="/control/save" class="stack">
+    <label>Scheduler Interval (minutes)
+      <input name="iteration_interval_minutes" type="number" min="1" value="{{ cfg.iteration_interval_minutes }}">
+    </label>
+    <label class="checkbox">
+      <input name="scheduler_enabled" type="checkbox" {% if cfg.scheduler_enabled %}checked{% endif %}>
+      Start scheduler automatically
+    </label>
+
+    <div class="section-label">Provider</div>
+    <label>LLM Mode
+      <select name="llm_mode">
+        <option value="ollama" {% if cfg.llm_mode == "ollama" %}selected{% endif %}>Ollama</option>
+        <option value="openai" {% if cfg.llm_mode == "openai" %}selected{% endif %}>OpenAI</option>
+      </select>
+    </label>
+    <label>Ollama Base URL
+      <input name="ollama_base_url" value="{{ cfg.ollama.base_url }}">
+    </label>
+    <label>Ollama Model
+      <input name="ollama_model" value="{{ cfg.ollama.model }}">
+    </label>
+    <label>OpenAI API Key Env
+      <input name="openai_api_key_env" value="{{ cfg.openai.api_key_env }}">
+    </label>
+    <label>OpenAI Model
+      <input name="openai_model" value="{{ cfg.openai.model }}">
+    </label>
+
+    <div class="section-label">Research Limits</div>
+    <label>Max Sources
+      <input name="max_sources" type="number" min="1" value="{{ cfg.max_sources }}">
+    </label>
+    <label>Max Fetch Bytes
+      <input name="max_fetch_bytes" type="number" min="10000" step="1000" value="{{ cfg.max_fetch_bytes }}">
+    </label>
+    <label>Request Timeout (seconds)
+      <input name="timeout_sec" type="number" min="5" value="{{ cfg.timeout_sec }}">
+    </label>
+
+    <button class="btn primary" type="submit">Save Control Panel</button>
+  </form>
+</div>
+{% endblock %}

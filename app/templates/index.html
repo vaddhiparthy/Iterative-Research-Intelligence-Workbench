@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+{% if msg %}
+<div class="card">
+  <strong>{{ msg }}</strong>
+</div>
+{% endif %}
+
+<div class="card">
+  <h3>Active Research Topics</h3>
+  <table>
+    <thead><tr><th>ID</th><th>Title</th><th>Status</th><th>Iterations</th><th>Latest change</th><th>Last run</th></tr></thead>
+    <tbody>
+      {% for t in active %}
+      <tr>
+        <td class="mono"><a href="/topic/{{ t.id }}">{{ t.id }}</a></td>
+        <td>{{ t.title }}</td>
+        <td class="status">{{ t.status }}</td>
+        <td>{{ t.iteration_count }}</td>
+        <td>{{ t.latest_change or "—" }}</td>
+        <td class="mono">{{ t.last_runtime|fmt_ts if t.last_runtime else "—" }}</td>
+      </tr>
+      {% endfor %}
+      {% if active|length == 0 %}<tr><td colspan="6" class="muted">No active or queued topics</td></tr>{% endif %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h3>Archived</h3>
+  <ul>
+    {% for a in archived %}
+      <li class="muted"><a href="/topic/{{ a.id }}">{{ a.title }}</a> (archived)</li>
+    {% endfor %}
+    {% if archived|length == 0 %}<li class="muted">None</li>{% endif %}
+  </ul>
+</div>
+{% endblock %}

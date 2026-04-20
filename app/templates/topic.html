@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+{% if msg %}
+<div class="card">
+  <strong>{{ msg }}</strong>
+</div>
+{% endif %}
+<div class="topic-layout">
+  <div>
+    <div class="card">
+      <div class="muted">{{ topic.id }} · Status {{ topic.status }} · Iter {{ topic.iteration_count }} · Last run {{ topic.last_runtime|fmt_ts if topic.last_runtime else "—" }}</div>
+      <h2>{{ topic.title }}</h2>
+      {% if topic.summary %}<p><em>{{ topic.summary }}</em></p>{% endif %}
+      {% if topic.note %}<p class="muted">Latest note: {{ topic.note }}</p>{% endif %}
+
+      <h3>Description</h3>
+      <div>{{ topic.description | md_text | safe }}</div>
+
+      <h3>Latest Report</h3>
+      <div>{{ topic.report | md_essay | safe }}</div>
+
+      <h3>Sources</h3>
+      <ul>
+        {% for s in topic.sources %}
+          <li>{{ s }}</li>
+        {% else %}
+          <li class="muted">—</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Revision History</h3>
+      <ul>
+        {% for r in topic.revisions %}
+          <li class="mono">{{ r.ts|fmt_ts if r.ts else "—" }} — {{ r.note }}</li>
+        {% else %}
+          <li class="muted">No revisions yet</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <div class="card feedback-shell" id="feedback">
+      <h3>Research Feedback</h3>
+      <p class="muted">Send steering feedback here. Older messages are summarized for efficiency, and the latest messages are weighted more heavily on each research cycle.</p>
+      <div class="feedback-thread">
+        {% if topic.feedback_summary %}
+          <div class="bubble summary">
+            <div>{{ topic.feedback_summary }}</div>
+            <small>Older feedback summary</small>
+          </div>
+        {% endif %}
+        {% for item in topic.feedback_messages %}
+          <div class="bubble">
+            <div>{{ item.text }}</div>
+            <small>{{ item.ts|fmt_ts }}</small>
+          </div>
+        {% else %}
+          {% if not topic.feedback_summary %}
+            <div class="muted">No feedback yet.</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <form method="post" action="/topic/{{ topic.id }}/feedback" class="stack feedback-form">
+        <textarea name="feedback" rows="3" placeholder="Type feedback and press Enter to send. Use Shift+Enter for a new line."></textarea>
+        <button class="btn primary" type="submit">Send Feedback</button>
+      </form>
+    </div>
+
+    <div class="row-actions">
+      <form method="post" action="/topic/{{ topic.id }}/run">
+        <button class="btn primary" type="submit">Run Research Cycle</button>
+      </form>
+      <form method="post" action="/topic/{{ topic.id }}/stop" onsubmit="return confirm('Archive this topic?');">
+        <button class="btn" type="submit">Archive Topic</button>
+      </form>
+      <a class="btn" href="/control">Open Control Panel</a>
+      <a class="btn" href="/">Back</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

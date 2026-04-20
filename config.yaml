@@ -1,0 +1,20 @@
+﻿vault_root: /vault
+topics_dir: topics
+runs_dir: runs
+archived_dir: archived
+
+# LLM config (pick one)
+llm_mode: ollama   # or: openai
+
+ollama:
+  base_url: http://host.docker.internal:11434
+  model: llama3.1:8b
+
+openai:
+  api_key_env: OPENAI_API_KEY
+  model: gpt-4o-mini
+
+max_sources: 10
+max_fetch_bytes: 800000
+timeout_sec: 15
+iteration_interval_minutes: 60

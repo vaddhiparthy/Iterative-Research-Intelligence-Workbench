@@ -1,0 +1,11 @@
+﻿{
+  "name": "ASTRA-X Deep Researcher",
+  "short_name": "DeepResearcher",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "icons": [
+    { "src": "/static/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:900px">
+  <h3>Submit Research Topic</h3>
+  <p class="muted">Create a topic, then use the dashboard control panel to run a cycle immediately or let the scheduler continue iterating on it.</p>
+  <form method="post" class="stack">
+    <label>Title
+      <input name="title" required placeholder="What do you want researched?">
+    </label>
+    <label>Description
+      <textarea name="desc" rows="12" placeholder="Explain what to cover, constraints, desired depth, comparison points, questions to answer, and any preferred source types."></textarea>
+    </label>
+    <div class="row-actions">
+      <button class="btn primary" type="submit">Create Topic</button>
+      <a class="btn" href="/">Back to Dashboard</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

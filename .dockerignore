@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.git/
+.github/
+vault/
+vault-*/
+*.sqlite3
+*.db
+*.log
+.env
+.env.*

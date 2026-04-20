@@ -1,0 +1,19 @@
+services:
+  deepresearcher:
+    container_name: deepresearcher
+    image: astra-x-deepresearcher:latest
+    build:
+      context: .
+    ports:
+      - "9990:9990"
+    restart: unless-stopped
+    volumes:
+      - deepresearcher_vault:/vault
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; urllib.request.urlopen('http://127.0.0.1:9990/api/scheduler/status').read(); sys.exit(0)"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  deepresearcher_vault:
