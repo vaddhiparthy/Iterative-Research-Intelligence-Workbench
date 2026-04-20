@@ -145,6 +145,8 @@ GET /api/scheduler/status
 - stronger provider abstraction
 - automated tests and CI expansion
 
-## License
+## Rights
 
-MIT. See [LICENSE](LICENSE).
+All rights are reserved. No use, copying, modification, distribution,
+commercialization, private deployment, or derivative work is permitted without
+the copyright holder's explicit prior written consent. See [LICENSE](LICENSE).
