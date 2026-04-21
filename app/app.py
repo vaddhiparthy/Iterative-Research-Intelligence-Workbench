@@ -45,7 +45,7 @@ TOPIC_VIEW_SOFT_LIMIT = 2 * 1024 * 1024
 MAX_REPORT_CHARS = 50000
 MAX_REVISIONS = 50
 MAX_SOURCES_STORED = 20
-FEEDBACK_KEEP_RECENT = 5
+FEEDBACK_KEEP_RECENT = 12
 FEEDBACK_SUMMARY_LIMIT = 2400
 
 CFG_LOCK = threading.RLock()
@@ -373,8 +373,11 @@ def _normalize_topic(topic: dict) -> dict:
     for item in topic.get("feedback_messages") or []:
         ts = str(item.get("ts", "")).strip()
         text = _unmangle(str(item.get("text", "")).strip())
+        role = str(item.get("role", "user") or "user").strip().lower()
+        if role not in ("user", "system"):
+            role = "user"
         if ts and text:
-            feedback_messages.append({"ts": ts, "text": text[:1000]})
+            feedback_messages.append({"ts": ts, "text": text[:1000], "role": role})
     normalized = {
         "id": str(topic["id"]).strip(),
         "title": _unmangle(str(topic.get("title") or topic["id"]).strip()),
@@ -521,11 +524,13 @@ def add_feedback(topic: dict, text: str) -> dict:
     if not clean:
         return topic
     messages = list(topic.get("feedback_messages") or [])
-    messages.append({"ts": iso_now(), "text": clean[:1000]})
+    now = iso_now()
+    messages.append({"ts": now, "text": clean[:1000], "role": "user"})
+    messages.append({"ts": now, "text": "Will guide research.", "role": "system"})
     topic["feedback_messages"] = messages
     topic = summarize_feedback(topic)
     topic["updated_at"] = iso_now()
-    topic["note"] = "User feedback added"
+    topic["note"] = "Feedback captured"
     return save_topic(topic)
 
 
@@ -651,6 +656,8 @@ def summarize_feedback(topic: dict) -> dict:
     if topic.get("feedback_summary"):
         parts.append(topic["feedback_summary"].strip())
     for item in older:
+        if item.get("role") != "user":
+            continue
         text = re.sub(r"\s+", " ", item["text"]).strip()
         if text:
             parts.append(f"{fmt_readable(item['ts'])}: {text[:180]}")
@@ -661,7 +668,7 @@ def summarize_feedback(topic: dict) -> dict:
 
 def feedback_context(topic: dict) -> str:
     summary = (topic.get("feedback_summary") or "").strip()
-    messages = list(topic.get("feedback_messages") or [])
+    messages = [item for item in list(topic.get("feedback_messages") or []) if item.get("role") == "user"]
     latest = messages[-1]["text"] if messages else ""
     recent_lines = [f"- {fmt_readable(item['ts'])}: {item['text']}" for item in messages[-FEEDBACK_KEEP_RECENT:]]
     blocks = []
@@ -757,7 +764,7 @@ def research_once(topic: dict) -> tuple[dict, str]:
         topic["sources"] = srcs[:MAX_SOURCES_STORED]
     if topic["status"] in ("queued", "staging"):
         topic["status"] = "active"
-    return topic, "Updated synthesis"
+    return topic, ("Updated synthesis with feedback" if feedback.strip() != "No user steering feedback yet." else "Updated synthesis")
 
 
 def iterate_once_sync(trigger: str = "manual") -> dict:
@@ -777,7 +784,10 @@ def iterate_once_sync(trigger: str = "manual") -> dict:
             return {"ok": True, "message": note}
 
         for topic in topics:
-            updated = dict(topic)
+            current = get_topic(topic["id"]) or topic
+            if current.get("status") == "archived":
+                continue
+            updated = dict(current)
             updated["iteration_count"] = int(updated.get("iteration_count") or 0) + 1
             updated["last_runtime"] = iso_now()
             updated["updated_at"] = iso_now()
@@ -785,6 +795,12 @@ def iterate_once_sync(trigger: str = "manual") -> dict:
                 updated, note = research_once(updated)
             except Exception as e:
                 note = f"Research error: {e}"
+            latest_db = get_topic(updated["id"]) or {}
+            if latest_db.get("status") == "archived":
+                continue
+            if latest_db:
+                updated["feedback_messages"] = list(latest_db.get("feedback_messages") or [])
+                updated["feedback_summary"] = latest_db.get("feedback_summary") or ""
             revisions = list(updated.get("revisions") or [])
             revisions.insert(0, {"ts": updated["last_runtime"], "note": note})
             updated["revisions"] = revisions[:MAX_REVISIONS]

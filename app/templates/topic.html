@@ -53,7 +53,7 @@
           </div>
         {% endif %}
         {% for item in topic.feedback_messages %}
-          <div class="bubble">
+          <div class="bubble {{ item.role or 'user' }}">
             <div>{{ item.text }}</div>
             <small>{{ item.ts|fmt_ts }}</small>
           </div>
