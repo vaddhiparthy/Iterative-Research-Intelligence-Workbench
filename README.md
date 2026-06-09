@@ -1,6 +1,8 @@
-# Astra-X-Deepresearcher
+# Iterative Research Intelligence Workbench
 
 A containerized deep-research workspace for iterative topic tracking, scheduled research cycles, per-topic user feedback, and a browser-based control panel.
+
+> Prerequisite: a local Ollama must be running (default `llm_mode: ollama`, reachable at `host.docker.internal:11434`).
 
 ## What It Does
 

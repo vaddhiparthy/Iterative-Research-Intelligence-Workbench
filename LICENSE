@@ -1,16 +1,22 @@
-All Rights Reserved
+Copyright (c) 2026 Sri Surya S. Vaddhiparthy. All rights reserved.
 
-Copyright (c) 2026 Vaddhiparthy. All rights reserved.
+This repository and all of its original source code, documentation, designs, and other
+materials (the "Work") are the proprietary and confidential property of Sri Surya S.
+Vaddhiparthy (the "Author").
 
-This repository, including all source code, documentation, assets, designs,
-workflows, and related materials, is proprietary.
+No license or right is granted to any person to use, copy, modify, merge, publish,
+distribute, sublicense, sell, or create derivative works from the Work, in whole or in
+part, by any means, without the prior, explicit, written permission of the Author.
+Viewing this repository for evaluation or reference does not grant any such license.
 
-No permission is granted to use, copy, reproduce, modify, merge, publish,
-distribute, sublicense, sell, commercialize, privately use, deploy, train on,
-or create derivative works from any part of this repository without the
-copyright holder's prior explicit written consent.
+THIRD-PARTY COMPONENTS. The Work may incorporate or depend on third-party software,
+libraries, datasets, models, and other components that are owned by their respective
+authors and licensed under their own terms. All rights in and to those third-party
+components remain with their original authors, and nothing in this license modifies,
+supersedes, or claims ownership over them. Such components continue to be governed by,
+and must be used in accordance with, their original licenses and attributions.
 
-Access to this repository does not grant any license or other rights, whether
-express, implied, estoppel, or otherwise.
-
-Any unauthorized use is strictly prohibited.
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM,
+DAMAGES, OR OTHER LIABILITY ARISING FROM OR IN CONNECTION WITH THE WORK.
