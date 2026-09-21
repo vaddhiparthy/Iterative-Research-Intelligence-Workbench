@@ -1,5 +1,7 @@
 # Iterative Research Intelligence Workbench
 
+
+**Portfolio:** [vaddhiparthy.com](https://vaddhiparthy.com/) | [Data Platforms](https://vaddhiparthy.com/data-platforms)
 A containerized deep-research workspace for iterative topic tracking, scheduled research cycles, per-topic user feedback, and a browser-based control panel.
 
 > Prerequisite: a local Ollama must be running (default `llm_mode: ollama`, reachable at `host.docker.internal:11434`).
