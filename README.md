@@ -146,9 +146,6 @@ status endpoint.
 ├── docker-compose.yml
 ├── Dockerfile
 ├── start.py                   # Container entrypoint
-├── docs/
-│   ├── ARCHITECTURE.md
-│   └── OPERATIONS.md
 └── .github/workflows/ci.yml
 ```
 

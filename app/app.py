@@ -471,10 +471,6 @@ def list_topics() -> list[dict]:
     return [_row_to_topic(row) for row in rows]
 
 
-def topic_path(rid: str) -> str:
-    return os.path.join(TOPICS, f"{rid}.md")
-
-
 def next_rid() -> str:
     return "research-" + dt.datetime.now(ET).strftime("%Y%m%d%H%M%S")
 
